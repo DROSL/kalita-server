@@ -29,5 +29,5 @@ python server.py
 After the server started you can send requests to the server.
 
 ```bash
-GET http://localhost:3000/api/tts?*text*=Here%20comes%20your%20text&*language*=english
+GET http://localhost:3000/api/tts?text=Here%20comes%20your%20text&language=english
 ```
