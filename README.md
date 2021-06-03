@@ -3,7 +3,7 @@
 ## 🔗 Links and Resources
 | Type                            | Links                               |
 | ------------------------------- | --------------------------------------- |
-| 💾 **Installation**               | [TTS/README.md](https://github.com/coqui-ai/TTS/tree/dev#install-tts)|
+| 💾 **Installation**               | [TTS/README.md](https://github.com/azmke/kalita-server#install-tts)|
 
 ## Install TTS
 Kalita is tested on Windows 10 with **python 3.8.9**.
