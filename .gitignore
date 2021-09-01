@@ -1,6 +1,13 @@
 # Compiled class file
 *.class
 
+# Generated files
+./build*
+./files*
+.classpath
+.project
+requests.db
+
 # Log file
 *.log
 
