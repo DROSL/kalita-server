@@ -2,8 +2,10 @@
 *.class
 
 # Generated files
-./build*
-./files*
+/build*
+/files*
+/gradle*
+.gradle*
 .classpath
 .project
 requests.db

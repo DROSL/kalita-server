@@ -2,7 +2,7 @@
   <img src="https://image.flaticon.com/icons/png/512/2334/2334268.png" alt="Logo Kalita" width="200">
 </p>
 
-# kalita-js
+# kalita-server
 
 **Kalita** a is text-to-speech software with a special focus on data minimization and user privacy. We do not collect any personal data, do not set tracking cookies and do not outsource our service to third-party cloud solutions. The speech synthesis takes place on-premises on your own server and still offers many of the conveniences of a conventional readspeaker.
 
@@ -16,15 +16,23 @@
 
 ## Install TTS
 Kalita is tested on Windows 10 with **python 3.8.9**.
+Run the **setup.bat** file or follow these steps;
 
 ```bash
-pip install TTS
+> pip install TTS
 ```
 
 The underlying coquiTTS uses ```espeak-ng``` to convert graphemes to phonemes. You might need to install separately [HERE](http://espeak.sourceforge.net/download.html). Or on Linux distributions via console:
 
 ```bash
-sudo apt-get install espeak-ng
+> sudo apt-get install espeak-ng
+```
+
+## Setup Java Server
+
+```bash
+> gradle wrapper
+> gradlew shadowJar
 ```
 
 ## Using the server
@@ -32,11 +40,11 @@ sudo apt-get install espeak-ng
 After the installation, Kalita provides a CLI interface for synthesizing speech as a server.
 
 ```bash
-python server.py
+> start.bat
 ```
 
 After the server started you can send requests to the server.
 
 ```bash
-GET http://localhost:3000/api/tts?text=Here%20comes%20your%20text&language=english
+> GET http://localhost:3000/api/tts?text=Here%20comes%20your%20text&language=english
 ```
