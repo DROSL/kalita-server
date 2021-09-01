@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Kalita Server Demo</title>
+		<script>
+			function sendMessage(){
+				var message = document.getElementById('userInput').value;
+				document.getElementById('userInput').value = '';
+				getAudio(message);
+			}
+
+			function showMessage(text) {
+				document.getElementById('message').innerHTML = text;
+			}
+
+			function getAudio(text){
+				let queryText = encodeURIComponent(text);
+				var audio = new Audio(`http://localhost:8080/speak/?text=${queryText}`);
+				audio.play();
+			}
+		</script>
+	</head>
+	<body>
+		<input id="userInput" type="text">
+		<button onclick="javascript:sendMessage()">TTS</button>
+		<div id="message"></div>
+	</body>
+</html>

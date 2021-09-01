@@ -3,6 +3,7 @@ import os
 import io
 import hashlib
 import sqlite3
+import os
 
 from datetime import datetime
 from flask import Flask, request, send_file
@@ -49,7 +50,7 @@ def save_request(time, ip_hash, text_hash, audio_hash):
 	database = sqlite3.connect('requests.db')
 	cursor = database.cursor()
 
-	cursor.execute(""" SELECT count(name) FROM sqlite_master WHERE type='table' AND name='requests' """)
+	cursor.execute("""SELECT count(name) FROM sqlite_master WHERE type='table' AND name='requests'""")
 	if(cursor.fetchone()[0] == 0): 
 		cursor.execute("""CREATE TABLE requests (time, ip, text, audio)""")
 
@@ -60,22 +61,39 @@ def save_request(time, ip_hash, text_hash, audio_hash):
 
 @app.route('/api/tts', methods=['GET'])
 def tts():
+	print("Test")
 	time = datetime.now().strftime('%d.%m.%Y - %H:%M:%S')
+	ip_hash = hashlib.sha256(request.access_route[0].encode('utf-8')).hexdigest()
 
 	text = request.args.get('text')
-
-	if(request.args.get('language')):
-		language = request.args.get('language')
-	else:
-		language = "german"
-
-	synthesizer = globals()[language]
-	wavs = synthesizer.tts(text)
-	out = io.BytesIO()
-	synthesizer.save_wav(wavs, out)
-
-	ip_hash = hashlib.sha256(request.access_route[0].encode('utf-8')).hexdigest()
 	text_hash = hashlib.sha256(text.encode('utf-8')).hexdigest()
+
+	file_path = "{}/files/{}".format(os.getcwd(), text_hash)
+	files_dir = "{}/files".format(os.getcwd())
+
+	if(os.path.isdir(files_dir) == False):
+		os.makedirs(files_dir)
+
+	if(os.path.isfile(file_path)):
+		file = open(file_path, "rb")
+		out = io.BytesIO(file.read())
+		file.close()
+		out.seek(0)
+	else:
+		if(request.args.get('language')):
+			language = request.args.get('language')
+		else:
+			language = "german"
+
+		synthesizer = globals()[language]
+		wavs = synthesizer.tts(text)
+		out = io.BytesIO()
+		synthesizer.save_wav(wavs, out)
+
+		file = open(file_path, "wb")
+		file.write(out.getbuffer())
+		file.close()
+
 	audio_hash = hashlib.sha256(repr(out).encode('utf-8')).hexdigest()
 
 	save_request(time, ip_hash, text_hash, audio_hash)
@@ -84,7 +102,7 @@ def tts():
 
 
 def main():
-	app.run(debug=False, host='0.0.0.0', port=3000)
+	app.run(debug=False, host='0.0.0.0', port=1337)
 
 
 if __name__ == '__main__':
