@@ -29,29 +29,38 @@ The underlying coquiTTS uses ```espeak-ng``` to convert graphemes to phonemes. Y
 > sudo apt-get install espeak-ng
 ```
 
-Now follow these steps:
+To convert text to speech we need to install coquiTTS as initial setup:
 
 ```bash
 > pip install TTS
 ```
 
-## Setup Java Server
+## Build Java Server
+Continue with "Using the server" if you already have the .jar file.
 
 ```bash
 > gradle wrapper
 > gradlew shadowJar
 ```
 
-## Using the server
+The .jar file gets saved to ./build/libs/
 
-After the installation, Kalita provides a CLI interface for synthesizing speech as a server.
+## Using the server
+Configure the address and port of the **Java server** in the **config.properties** file.
+
+Configure the address and port of the **Python server** in the **server.py** in line 105.
+
+Start both servers:
+```bash
+> java -jar build/libs/kalita-server-java-1.0.jar
+```
 
 ```bash
-> start.bat
+> python server.py
 ```
 
 After the server started you can send requests to the server.
 
 ```bash
-> GET http://localhost:3000/api/tts?text=Here%20comes%20your%20text&language=english
+> GET http://localhost:3000/api/tts?text=Here%20comes%20your%20text
 ```
