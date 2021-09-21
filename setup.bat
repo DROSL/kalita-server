@@ -1,1 +1,1 @@
-pip install TTS && gradle wrapper && gradlew shadowJar
+pip install TTS && gradle wrapper --gradle-version 7.2 && gradlew shadowJar

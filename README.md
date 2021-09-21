@@ -16,16 +16,23 @@
 
 ## Install TTS
 Kalita is tested on Windows 10 with **python 3.8.9**.
-Run the **setup.bat** file or follow these steps;
 
-```bash
-> pip install TTS
-```
+Prequesites:
+
+* Python 3.6 < Version < 3.9
+* OpenJDK Version >= 16.0.0
+* Gradle Version >= 7.0
 
 The underlying coquiTTS uses ```espeak-ng``` to convert graphemes to phonemes. You might need to install separately [HERE](http://espeak.sourceforge.net/download.html). Or on Linux distributions via console:
 
 ```bash
 > sudo apt-get install espeak-ng
+```
+
+Now follow these steps:
+
+```bash
+> pip install TTS
 ```
 
 ## Setup Java Server

@@ -51,12 +51,16 @@ public class kalitaServer {
 				port = Integer.parseInt(config.get(key));
 			}
 		}
-		InetSocketAddress address = new InetSocketAddress(server_address, port);
-		HttpServer httpServer = HttpServer.create(address, 0);
-		System.out.println("Http server started at " + address);
-		httpServer.createContext("/speak", new GetHandler());
-		httpServer.setExecutor(null);
-		httpServer.start();
+		try {
+			InetSocketAddress address = new InetSocketAddress(server_address, port);
+			HttpServer httpServer = HttpServer.create(address, 0);
+			System.out.println("Http server started at " + address);
+			httpServer.createContext("/speak", new GetHandler());
+			httpServer.setExecutor(null);
+			httpServer.start();
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
 	}
 
 	static class GetHandler implements HttpHandler {

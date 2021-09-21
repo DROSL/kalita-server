@@ -36,10 +36,11 @@ def create_synthesizer(model_args):
 path = "./.models.json"
 manager = ModelManager(path)
 
-languages = ['german', 'english']
+languages = ['german', 'english', 'french']
 
 german_args = {'model_name': 'tts_models/de/thorsten/tacotron2-DCA', 'vocoder_name': 'vocoder_models/universal/libri-tts/fullband-melgan'}
 english_args = {'model_name': 'tts_models/en/ljspeech/tacotron2-DCA', 'vocoder_name': 'vocoder_models/en/ljspeech/multiband-melgan'}
+french_args = {'model_name': 'tts_models/fr/mai/tacotron2-DDC', 'vocoder_name': 'vocoder_models/universal/libri-tts/wavegrad'}
 
 for x in languages:
 	globals()[x] = create_synthesizer(globals()[x + '_args'])
@@ -61,7 +62,6 @@ def save_request(time, ip_hash, text_hash, audio_hash):
 
 @app.route('/api/tts', methods=['GET'])
 def tts():
-	print("Test")
 	time = datetime.now().strftime('%d.%m.%Y - %H:%M:%S')
 	ip_hash = hashlib.sha256(request.access_route[0].encode('utf-8')).hexdigest()
 
