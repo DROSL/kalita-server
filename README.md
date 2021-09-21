@@ -19,9 +19,9 @@ Kalita is tested on Windows 10 with **python 3.8.9**.
 
 Prequesites:
 
-* Python 3.6 < Version < 3.9
-* OpenJDK Version >= 16.0.0
-* Gradle Version >= 7.0
+* [Python](https://www.python.org/downloads/release/python-389/) 3.6 < Version < 3.9
+* [OpenJDK](https://jdk.java.net/16/) Version >= 16.0.0
+* [Gradle](https://docs.gradle.org/current/userguide/installation.html) Version >= 7.0
 
 The underlying coquiTTS uses ```espeak-ng``` to convert graphemes to phonemes. You might need to install separately [HERE](http://espeak.sourceforge.net/download.html). Or on Linux distributions via console:
 
