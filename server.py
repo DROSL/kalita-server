@@ -102,7 +102,17 @@ def tts():
 
 
 def main():
-	app.run(debug=False, host='0.0.0.0', port=1337)
+	python_server_address = "0.0.0.0"
+	python_port = 1337
+	with open("config.properties") as f:
+		l = [line.split("=") for line in f.readlines()]
+		for key, value in l:
+			if(key == "python_server_address"):
+				python_server_address = str(value.strip())
+			if(key == "python_port"):
+				python_port = int(value.strip())
+	f.close()
+	app.run(debug=False, host=python_server_address, port=python_port)
 
 
 if __name__ == '__main__':

@@ -35,24 +35,31 @@ import com.sun.net.httpserver.HttpServer;
 import com.github.pemistahl.lingua.api.*;
 
 public class kalitaServer {
+	public static String server_address = "127.0.0.1";
+	public static int java_port = 8080;
+	public static String python_server_address = "127.0.0.1";
+	public static int python_port = 1337;
 
 	public static void main(String[] args) throws Exception {
 		kalitaServer server = new kalitaServer();
 
-		String server_address = "127.0.0.1";
-		int port = 8080;
-
 		Map<String, String> config = server.getConfig();
 		for (String key : config.keySet()){
-			if(key.equals("server_address")) {
+			if(key.equals("java_server_address")) {
 				server_address = config.get(key);
 			}
-			if(key.equals("port")) {
-				port = Integer.parseInt(config.get(key));
+			if(key.equals("python_server_address")) {
+				python_server_address = config.get(key);
+			}
+			if(key.equals("java_port")) {
+				java_port = Integer.parseInt(config.get(key));
+			}
+			if(key.equals("python_port")) {
+				python_port = Integer.parseInt(config.get(key));
 			}
 		}
 		try {
-			InetSocketAddress address = new InetSocketAddress(server_address, port);
+			InetSocketAddress address = new InetSocketAddress(server_address, java_port);
 			HttpServer httpServer = HttpServer.create(address, 0);
 			System.out.println("Http server started at " + address);
 			httpServer.createContext("/speak", new GetHandler());
@@ -67,7 +74,6 @@ public class kalitaServer {
 
 		@Override
 		public void handle(HttpExchange he) throws IOException {
-			// parse request
 			URI requestedUri = he.getRequestURI();
 			String query = requestedUri.getRawQuery();
 
@@ -184,7 +190,7 @@ public class kalitaServer {
 	static byte[] tts(String inputText, String language) throws IOException {
 		String text = URLEncoder.encode(inputText, StandardCharsets.UTF_8).replace("+","%20");
 		
-		String GET_URL = "http://localhost:1337/api/tts?text=%s&language=%s";
+		String GET_URL = "http://" + python_server_address + ":" + python_port + "/api/tts?text=%s&language=%s";
 
 		GET_URL = String.format(GET_URL, text, language);
 
@@ -234,8 +240,10 @@ public class kalitaServer {
 			}
 
 			// get the property value and print it out
-			properties.put("server_address", prop.getProperty("server_address"));
-			properties.put("port", prop.getProperty("port"));
+			properties.put("java_server_address", prop.getProperty("java_server_address"));
+			properties.put("java_port", prop.getProperty("java_port"));
+			properties.put("python_server_address", prop.getProperty("python_server_address"));
+			properties.put("python_port", prop.getProperty("python_port"));
 			input.close();
 		} catch (Exception e) {
 			System.out.println("Exception: " + e);
