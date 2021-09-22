@@ -43,7 +43,7 @@ Continue with "Using the server" if you already have the .jar file.
 > gradlew shadowJar
 ```
 
-The .jar file gets saved to ./build/libs/
+The `.jar` file gets saved to `./build/libs/`.
 
 ## Using the server
 Configure the address and port of the **Java server** and **Python server** in the **config.properties** file.
@@ -60,5 +60,5 @@ Start both servers:
 After the server started you can send requests to the server.
 
 ```bash
-> GET http://localhost:3000/api/tts?text=Here%20comes%20your%20text
+> GET http://localhost:8080/api/tts?text=Here%20comes%20your%20text
 ```
