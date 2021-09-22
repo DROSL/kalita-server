@@ -35,7 +35,7 @@ import com.sun.net.httpserver.HttpServer;
 import com.github.pemistahl.lingua.api.*;
 
 public class kalitaServer {
-	public static String server_address = "127.0.0.1";
+	public static String java_server_address = "127.0.0.1";
 	public static int java_port = 8080;
 	public static String python_server_address = "127.0.0.1";
 	public static int python_port = 1337;
@@ -46,7 +46,7 @@ public class kalitaServer {
 		Map<String, String> config = server.getConfig();
 		for (String key : config.keySet()){
 			if(key.equals("java_server_address")) {
-				server_address = config.get(key);
+				java_server_address = config.get(key);
 			}
 			if(key.equals("python_server_address")) {
 				python_server_address = config.get(key);
@@ -59,7 +59,7 @@ public class kalitaServer {
 			}
 		}
 		try {
-			InetSocketAddress address = new InetSocketAddress(server_address, java_port);
+			InetSocketAddress address = new InetSocketAddress(java_server_address, java_port);
 			HttpServer httpServer = HttpServer.create(address, 0);
 			System.out.println("Http server started at " + address);
 			httpServer.createContext("/speak", new GetHandler());

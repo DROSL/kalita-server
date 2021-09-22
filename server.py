@@ -9,6 +9,7 @@ from datetime import datetime
 from flask import Flask, request, send_file
 from TTS.utils.synthesizer import Synthesizer
 from TTS.utils.manage import ModelManager
+from urllib.parse import unquote
 
 def create_synthesizer(model_args):
 	if model_args['model_name'] is not None:
@@ -65,7 +66,8 @@ def tts():
 	time = datetime.now().strftime('%d.%m.%Y - %H:%M:%S')
 	ip_hash = hashlib.sha256(request.access_route[0].encode('utf-8')).hexdigest()
 
-	text = request.args.get('text')
+	text = unquote(request.args.get('text'))
+	print(text)
 	text_hash = hashlib.sha256(text.encode('utf-8')).hexdigest()
 
 	file_path = "{}/files/{}".format(os.getcwd(), text_hash)
