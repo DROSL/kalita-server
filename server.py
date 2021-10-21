@@ -39,7 +39,7 @@ manager = ModelManager(path)
 
 languages = ['german', 'english', 'french']
 
-german_args = {'model_name': 'tts_models/de/thorsten/tacotron2-DCA', 'vocoder_name': 'vocoder_models/universal/libri-tts/fullband-melgan'}
+german_args = {'model_name': 'tts_models/de/thorsten/tacotron2-DCA', 'vocoder_name': 'vocoder_models/de/thorsten/fullband-melgan'}
 english_args = {'model_name': 'tts_models/en/ljspeech/tacotron2-DCA', 'vocoder_name': 'vocoder_models/en/ljspeech/multiband-melgan'}
 french_args = {'model_name': 'tts_models/fr/mai/tacotron2-DDC', 'vocoder_name': 'vocoder_models/universal/libri-tts/wavegrad'}
 
@@ -66,7 +66,7 @@ def tts():
 	time = datetime.now().strftime('%d.%m.%Y - %H:%M:%S')
 	ip_hash = hashlib.sha256(request.access_route[0].encode('utf-8')).hexdigest()
 
-	text = unquote(request.args.get('text'))
+	text = unquote(request.args.get('text') + ".")
 	print(text)
 	text_hash = hashlib.sha256(text.encode('utf-8')).hexdigest()
 
