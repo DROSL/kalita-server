@@ -40,7 +40,7 @@ manager = ModelManager(path)
 languages = ['german', 'english', 'french']
 
 german_args = {'model_name': 'tts_models/de/thorsten/tacotron2-DCA', 'vocoder_name': 'vocoder_models/de/thorsten/fullband-melgan'}
-english_args = {'model_name': 'tts_models/en/ljspeech/tacotron2-DCA', 'vocoder_name': 'vocoder_models/en/ljspeech/multiband-melgan'}
+english_args = {'model_name': 'tts_models/en/ljspeech/speedy-speech', 'vocoder_name': 'vocoder_models/en/ljspeech/hifigan_v2'}
 french_args = {'model_name': 'tts_models/fr/mai/tacotron2-DDC', 'vocoder_name': 'vocoder_models/universal/libri-tts/wavegrad'}
 
 for x in languages:
