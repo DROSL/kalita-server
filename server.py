@@ -4,6 +4,8 @@ import io
 import hashlib
 import sqlite3
 import os
+import spacy
+import wave
 
 from datetime import datetime
 from flask import Flask, request, send_file
@@ -34,7 +36,7 @@ def create_synthesizer(model_args):
 	synthesizer = Synthesizer(model_args['tts_checkpoint'], model_args['tts_config'], None, model_args['vocoder_checkpoint'], model_args['vocoder_config'])
 	return synthesizer
 
-path = "./.models.json"
+path = os.path.join(os.getcwd(), ".models.json")
 manager = ModelManager(path)
 
 languages = ['german', 'english', 'french']
@@ -66,30 +68,62 @@ def tts():
 	time = datetime.now().strftime('%d.%m.%Y - %H:%M:%S')
 	ip_hash = hashlib.sha256(request.access_route[0].encode('utf-8')).hexdigest()
 
-	text = unquote(request.args.get('text') + ".")
-	print(text)
-	text_hash = hashlib.sha256(text.encode('utf-8')).hexdigest()
+	files = []
 
-	file_path = "{}/files/{}".format(os.getcwd(), text_hash)
-	files_dir = "{}/files".format(os.getcwd())
+	text = unquote(request.args.get('text') + ".")
+	nlp = spacy.load("de_core_news_sm")
+	doc = nlp(text)
 
 	if(request.args.get('language')):
 		language = request.args.get('language')
 	else:
 		language = "german"
 
-	synthesizer = globals()[language]
-	wavs = synthesizer.tts(text)
-	out = io.BytesIO()
-	synthesizer.save_wav(wavs, out)
+	full_text_hash = hashlib.sha256(text.encode('utf-8')).hexdigest()
 
-	file = open(file_path, "wb")
-	file.write(out.getbuffer())
+	assert doc.has_annotation("SENT_START")
+	for sent in doc.sents:
+		text = sent.text
+		text_hash = hashlib.sha256(text.encode('utf-8')).hexdigest()
+		file_path = os.path.join(os.getcwd(), "files", text_hash)
+
+		if(os.path.isfile(file_path)):
+			file = open(file_path, "rb")
+			out = io.BytesIO(file.read())
+			file.close()
+			files.append(file_path)
+			out.seek(0)
+		else:
+			synthesizer = globals()[language]
+			wavs = synthesizer.tts(text)
+			out = io.BytesIO()
+			synthesizer.save_wav(wavs, out)
+			file = open(file_path, "wb")
+			file.write(out.getbuffer())
+			file.close()
+			files.append(file_path)
+
+		audio_hash = hashlib.sha256(repr(out).encode('utf-8')).hexdigest()
+
+		save_request(time, ip_hash, text_hash, audio_hash)
+
+	data= []
+	for file in files:
+		w = wave.open(file, 'rb')
+		data.append( [w.getparams(), w.readframes(w.getnframes())] )
+		w.close()
+
+	output_path = os.path.join(os.getcwd(), "files", full_text_hash)
+
+	output = wave.open(output_path, 'wb')
+	output.setparams(data[0][0])
+	for i in range(len(data)):
+		output.writeframes(data[i][1])
+	output.close()
+	file = open(output_path, "rb")
+	out = io.BytesIO(file.read())
 	file.close()
-
-	audio_hash = hashlib.sha256(repr(out).encode('utf-8')).hexdigest()
-
-	save_request(time, ip_hash, text_hash, audio_hash)
+	os.remove(output_path)
 
 	return send_file(out, mimetype='audio/wav')
 
